@@ -48,7 +48,7 @@ const Book: React.FC<BookProps> = ({ book }) => {
             </Link>
 
             <div className="w-full flex items-center justify-between mt-4 transition opacity-100 group-hover:opacity-100">
-                <Rating reviews={book.reviews} />
+                <Rating reviews={book.reviews || []} />
                 <button
                     onClick={() => handleAddToCart(book)}
                     className="btn btn-primary btn-sm gap-2"

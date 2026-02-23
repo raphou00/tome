@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState } from "react";
 import { useSearchParams, usePathname, useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Search } from "lucide-react";
@@ -10,11 +10,11 @@ import Title from "@/components/ui/title";
 import Book from "@/components/ui/book";
 
 type SortOption =
+    | "popularity"
     | "newest"
     | "oldest"
     | "price-low-high"
-    | "price-high-low"
-    | "popularity";
+    | "price-high-low";
 
 type ExploreProps = {
     books: Books;
@@ -34,102 +34,69 @@ const Explore: React.FC<ExploreProps> = ({
     const pathname = usePathname();
     const { replace } = useRouter();
 
-    const [searchQuery, setSearchQuery] = useState(searchParams.get("q") || "");
-    const [sortBy, setSortBy] = useState<SortOption>(
-        (searchParams.get("sort") as SortOption) || "newest"
-    );
+    const [searchInput, setSearchInput] = useState(searchParams.get("q") || "");
 
     const totalPages = Math.ceil(totalBooks / perPage);
 
-    useEffect(() => {
+    const updateParams = (key: string, value: string) => {
         const params = new URLSearchParams(searchParams);
-        if (searchQuery) {
-            params.set("q", searchQuery);
+        if (value) {
+            params.set(key, value);
         } else {
-            params.delete("q");
+            params.delete(key);
         }
-        params.set("sort", sortBy);
-        params.set("page", String(currentPage));
-        replace(`${pathname}?${params.toString()}`);
-    }, [searchQuery, sortBy, currentPage, pathname, replace, searchParams]);
-
-    const filteredBooks = useMemo(() => {
-        const filtered = books.filter((book) => {
-            const query = searchQuery.toLowerCase();
-            const matchesSearch =
-                !query ||
-                book.title.toLowerCase().includes(query) ||
-                book.authors?.some((author) =>
-                    author.toLowerCase().includes(query)
-                ) ||
-                book.subjects?.some((subject) =>
-                    subject.toLowerCase().includes(query)
-                );
-
-            return matchesSearch;
-        });
-
-        filtered.sort((a, b) => {
-            switch (sortBy) {
-                case "oldest":
-                    return (
-                        new Date(a.createdAt).getTime() -
-                        new Date(b.createdAt).getTime()
-                    );
-                case "price-low-high":
-                    return a.price - b.price;
-                case "price-high-low":
-                    return b.price - a.price;
-                case "popularity":
-                    return b.popularity - a.popularity;
-                case "newest":
-                default:
-                    return (
-                        new Date(b.createdAt).getTime() -
-                        new Date(a.createdAt).getTime()
-                    );
-            }
-        });
-
-        return filtered;
-    }, [books, searchQuery, sortBy]);
-
-    const handlePageChange = (page: number) => {
-        const params = new URLSearchParams(searchParams);
-        params.set("page", String(page));
+        if (key !== "page") {
+            params.set("page", "1");
+        }
         replace(`${pathname}?${params.toString()}`);
     };
+
+    const handleSearch = (e: React.FormEvent) => {
+        e.preventDefault();
+        updateParams("q", searchInput);
+    };
+
+    const handleSortChange = (value: SortOption) => {
+        updateParams("sort", value);
+    };
+
+    const handlePageChange = (page: number) => {
+        updateParams("page", String(page));
+    };
+
+    const currentSort =
+        (searchParams.get("sort") as SortOption) || "popularity";
 
     return (
         <>
             <div className="flex items-end gap-x-4">
                 <Title text={t("title")} className="text-3xl lg:text-4xl" />
                 <p className="text-neutral/80">
-                    {t("books-found", { count: filteredBooks.length })}
+                    {t("books-found", { count: totalBooks })}
                 </p>
             </div>
 
             <div className="my-6">
                 <div className="flex flex-col lg:flex-row gap-4">
-                    <div className="flex-1 relative">
+                    <form onSubmit={handleSearch} className="flex-1 relative">
                         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-base-content/60 size-5 z-50" />
                         <input
                             type="search"
                             placeholder={t("search")}
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
+                            value={searchInput}
+                            onChange={(e) => setSearchInput(e.target.value)}
                             className="input w-full px-3 pl-9 border-2 bg-base-100 tracking-wide transition placeholder:text-neutral-400 focus:border-primary/80 focus:outline-none focus:bg-base-300"
                             spellCheck={false}
                             autoComplete="off"
                             autoCapitalize="off"
                             autoCorrect="off"
                         />
-                    </div>
+                    </form>
 
                     <select
-                        value={sortBy}
+                        value={currentSort}
                         onChange={(e) =>
-                            setSortBy(e.target.value as SortOption)
+                            handleSortChange(e.target.value as SortOption)
                         }
                         className="select w-min appearance-none border-2 outline-none focus-within:border-primary/80 focus:bg-base-300"
                     >
@@ -146,11 +113,11 @@ const Explore: React.FC<ExploreProps> = ({
                 </div>
             </div>
 
-            {filteredBooks.length === 0 ?
+            {books.length === 0 ?
                 <NoBooksResults />
             :   <>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-14">
-                        {filteredBooks.map((book) => (
+                        {books.map((book) => (
                             <Book key={book.id} book={book} />
                         ))}
                     </div>
@@ -179,7 +146,7 @@ const Explore: React.FC<ExploreProps> = ({
                                         );
                                     })
                                     .map((page, idx, arr) => (
-                                        <>
+                                        <div key={idx}>
                                             {idx > 0 &&
                                                 arr[idx - 1] !== page - 1 && (
                                                     <button
@@ -202,7 +169,7 @@ const Explore: React.FC<ExploreProps> = ({
                                             >
                                                 {page}
                                             </button>
-                                        </>
+                                        </div>
                                     ))}
                                 <button
                                     className="join-item btn"

@@ -24,7 +24,7 @@ export type Token = Prisma.TokenModel;
 export type Role = RoleEnum;
 
 export type Books = (Prisma.BookModel & {
-    reviews: { rating: number }[];
+    reviews?: { rating: number }[];
 })[];
 
 export type Book = Prisma.BookModel & {

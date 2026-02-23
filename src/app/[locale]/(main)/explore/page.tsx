@@ -23,10 +23,18 @@ const Page = async ({
     const page = parseInt(params.page || "1", 10);
     const perPage = PER_PAGE;
     const skip = (page - 1) * perPage;
+    const search = params.q || "";
+    const sort =
+        (params.sort as
+            | "newest"
+            | "oldest"
+            | "price-low-high"
+            | "price-high-low"
+            | "popularity") || "newest";
 
     const [books, totalBooks] = await Promise.all([
-        getBooksExplore({ take: perPage, skip }),
-        getBooksCount(),
+        getBooksExplore({ take: perPage, skip, search, sort }),
+        getBooksCount(search),
     ]);
 
     return (
