@@ -44,15 +44,17 @@ const Book: React.FC<BookProps> = ({ book }) => {
                         className="text-lg font-medium truncate"
                     />
 
-                    <p className="text-sm text-base-content/70">{authors}</p>
+                    <p className="text-sm text-base-content/70 truncate">
+                        {authors}
+                    </p>
                 </div>
             </Link>
 
-            <div className="w-full flex items-center justify-between mt-4 transition opacity-100 group-hover:opacity-100">
+            <div className="w-full flex max-xl:flex-col items-center max-xl:items-start justify-between gap-y-2 mt-1 transition opacity-100 group-hover:opacity-100">
                 <Rating reviews={book.reviews || []} />
                 <button
                     onClick={() => handleAddToCart(book)}
-                    className="btn btn-primary btn-sm gap-2"
+                    className="btn btn-primary btn-sm gap-2 max-xl:w-full"
                 >
                     <ShoppingBag className="size-5" />
                     {t("add-to-cart")}

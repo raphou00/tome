@@ -160,14 +160,14 @@ export const Home: React.FC<CarouselProps> = ({
                                             transition={{ delay: 0.2 }}
                                             className="space-y-6 z-10"
                                         >
-                                            <span className="badge badge-lg badge-primary mb-3">
+                                            <span className="badge badge-lg badge-primary mb-2">
                                                 {book.authors}
                                             </span>
                                             <Title
                                                 text={book.title}
-                                                className="text-2xl md:text-4xl font-black"
+                                                className="text-2xl md:text-4xl font-black mb-2"
                                             />
-                                            <p className="text-lg md:text-xl text-base-content/80 max-w-md">
+                                            <p className="text-lg md:text-xl text-base-content/80 max-w-md mb-2">
                                                 {book.summaries?.[0]?.slice(
                                                     0,
                                                     80
@@ -204,6 +204,7 @@ export const Home: React.FC<CarouselProps> = ({
                                                     priority
                                                     className="rounded-field object-contain transition hover:scale-105"
                                                 />
+                                                <div className="absolute w-72 aspect-9/12" />
                                             </div>
                                         </motion.div>
                                     </div>
