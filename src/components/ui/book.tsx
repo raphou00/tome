@@ -14,13 +14,14 @@ type BookProps = {
 
 const Book: React.FC<BookProps> = ({ book }) => {
     const t = useTranslations("pages.explore");
+    const tCommon = useTranslations("common");
     const { addItem } = useCart();
 
     const handleAddToCart = (book: Books[number]) => {
         addItem(book.id, book.title, book.cover, book.price);
     };
 
-    const authors = book.authors?.join(", ") || "Unknown Author";
+    const authors = book.authors?.join(", ") || tCommon("unknown-author");
 
     return (
         <div key={book.id} className="group">

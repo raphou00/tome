@@ -8,6 +8,7 @@
         "error": "An error occurred, please try again later",
         "not-found": "Page Not Found",
         "back-home": "Back to Home",
+        "unknown-author": "Unknown Author",
         "reviews": "{count, plural, =0 {No reviews} =1 {1 review} other {# reviews}}",
         "cookies": {
             "title": "Do you consent?",
@@ -146,32 +147,57 @@
             "submit": "Delete"
         },
         "home": {
-            "brainrot": {
-                "tralalertralala": {
-                    "title": "Tralalero Tralala",
-                    "description": "Read books about the mighty Tralalero Tralala",
-                    "cta": "Order now"
-                },
-                "ballerinacappuccina": {
-                    "title": "Ballerina Cappuccina",
-                    "description": "Dance and twirl with the graceful Ballerina Cappuccina in magical adventures",
-                    "cta": "Discover the story"
-                },
-                "sigmaboyandgirl": {
-                    "title": "Sigma Boy & Sigma Girl",
-                    "description": "Join the cool duo on their epic quests to save the colorful brainrot kingdom",
-                    "cta": "Start reading"
-                },
-                "bombardirocrocodilo": {
-                    "title": "Bombardiro Crocodilo",
-                    "description": "Follow the funny crocodile's hilarious misadventures in the jungle",
-                    "cta": "Get the book"
-                },
-                "cappuccinoassassino": {
-                    "title": "Cappuccino Assassino",
-                    "description": "A silly coffee character's quest to become the world's funniest hero",
-                    "cta": "Read now"
-                }
+            "title": "Home",
+            "description": "Discover amazing children's books",
+            "hero": {
+                "badge": "eBook Store",
+                "cta-shop": "Shop Now",
+                "cta-browse": "Browse All"
+            },
+            "features": {
+                "instant-download": "Instant Download",
+                "instant-download-desc": "Get your eBook immediately after purchase",
+                "pdf-format": "PDF Format",
+                "pdf-format-desc": "Read on any device or print at home",
+                "high-quality": "High Quality",
+                "high-quality-desc": "Professionally designed illustrations",
+                "family-friendly": "Family Friendly",
+                "family-friendly-desc": "Stories kids love to read again and again"
+            },
+            "bestsellers": {
+                "title": "Bestsellers",
+                "subtitle": "Our most popular eBooks",
+                "view-all": "View All"
+            },
+            "why-choose": {
+                "title": "Why Choose Our eBooks?",
+                "description": "We offer the best digital reading experience for children and parents alike.",
+                "instant-delivery": "Instant digital delivery",
+                "pdf-compatible": "PDF format compatible with all devices",
+                "print-friendly": "Print-friendly for offline reading",
+                "lifetime-access": "Lifetime access to your purchases",
+                "secure-checkout": "Secure checkout with Stripe",
+                "instant": "Instant",
+                "delivery": "Delivery",
+                "pdf": "PDF",
+                "format": "Format",
+                "rating": "Rating",
+                "readers": "Readers"
+            },
+            "testimonials": {
+                "title": "What Our Readers Say",
+                "subtitle": "Join thousands of happy families"
+            },
+            "welcome": {
+                "title": "Welcome back!",
+                "description": "Continue reading your purchased eBooks",
+                "cta": "Go to Library"
+            },
+            "cta": {
+                "title": "Ready to Start Reading?",
+                "description": "Browse our collection of magical children's eBooks and start your adventure today!",
+                "shop-now": "Shop Now",
+                "create-account": "Create Account"
             }
         },
         "explore": {
@@ -215,7 +241,9 @@
             "reviews-book": "Review this book",
             "explore-more": "Explore more",
             "home": "Home",
-            "books": "Books"
+            "books": "Books",
+            "language": "Language",
+            "subjects": "Subjects"
         },
         "cart": {
             "title": "Shopping cart",
@@ -280,6 +308,7 @@
         }
     },
     "messages": {
+        "oops": "Oops!",
         "done": "Done",
         "required": "Required",
         "invalid-email": "Invalid E-Mail",

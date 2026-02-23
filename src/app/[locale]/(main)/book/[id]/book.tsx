@@ -20,6 +20,7 @@ type BookProps = {
 
 const BookDetails: React.FC<BookProps> = ({ book, recommendation }) => {
     const t = useTranslations("pages.book");
+    const tCommon = useTranslations("common");
     const { addItem } = useCart();
 
     const handleAddToCart = () => {
@@ -27,7 +28,9 @@ const BookDetails: React.FC<BookProps> = ({ book, recommendation }) => {
         toast.success(`${book.title} added to cart!`);
     };
 
-    const authors = book.authors?.join(", ") || "Unknown Author";
+    const authors =
+        book.authors?.join(", ") ||
+        tCommon("unknown-author", { defaultValue: "Unknown Author" });
 
     return (
         <div className="space-y-2">
@@ -49,15 +52,13 @@ const BookDetails: React.FC<BookProps> = ({ book, recommendation }) => {
             </nav>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <div className="space-y-6">
-                    <div className="w-full aspect-square">
+                <div className="flex justify-center">
+                    <div className="relative overflow-hidden rounded-field h-[500px] aspect-9/12">
                         <Image
                             src={book.cover}
                             alt={book.title}
-                            width={512}
-                            height={512}
-                            className="rounded-box size-full shadow-lg"
-                            priority
+                            fill
+                            className="rounded-field object-contain transition hover:scale-105"
                         />
                     </div>
                 </div>
@@ -79,7 +80,7 @@ const BookDetails: React.FC<BookProps> = ({ book, recommendation }) => {
                             {book.subjects?.slice(0, 5).map((subject) => (
                                 <span
                                     key={subject}
-                                    className="badge badge-secondary badge-sm"
+                                    className="badge badge-primary bg-primary/80 badge-sm"
                                 >
                                     {subject}
                                 </span>
@@ -89,7 +90,7 @@ const BookDetails: React.FC<BookProps> = ({ book, recommendation }) => {
                         <div className="grid grid-cols-2 gap-4 pt-6 border-t border-base-300">
                             <div>
                                 <div className="text-sm text-base-content/60">
-                                    Language
+                                    {t("language")}
                                 </div>
                                 <div className="font-medium">
                                     {book.languages?.[0] || "English"}
@@ -97,7 +98,7 @@ const BookDetails: React.FC<BookProps> = ({ book, recommendation }) => {
                             </div>
                             <div>
                                 <div className="text-sm text-base-content/60">
-                                    Subjects
+                                    {t("subjects")}
                                 </div>
                                 <div className="font-medium">
                                     {book.subjects?.length || 0}

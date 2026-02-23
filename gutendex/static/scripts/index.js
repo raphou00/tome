@@ -24,7 +24,7 @@
 
   try {
     browser = getBrowser();
-  } catch (error) {
+  } catch {
     showUnsupportedBrowserMessage();
     return;
   }

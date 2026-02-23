@@ -1,7 +1,7 @@
-import { type NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { getUser } from "@/lib/auth";
 
-export const GET = async (_req: NextRequest) => {
+export const GET = async () => {
     try {
         const user = await getUser();
 
@@ -17,7 +17,8 @@ export const GET = async (_req: NextRequest) => {
                 email: user.user.email,
             },
         });
-    } catch (_err) {
+    } catch (err) {
+        console.error(err);
         return NextResponse.json({ authenticated: false });
     }
 };

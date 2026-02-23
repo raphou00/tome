@@ -45,24 +45,24 @@ export const UpdatePassword: React.FC = () => {
 
                 <FormInput
                     type="password"
-                    label="Current password"
-                    placeholder="Enter your current password..."
+                    label={t("current")}
+                    placeholder={t("current-placeholder")}
                     error={state.errors?.currentPassword?.[0]}
                     {...register("currentPassword")}
                 />
 
                 <FormInput
                     type="password"
-                    label="New password"
-                    placeholder="Enter your new password..."
+                    label={t("new")}
+                    placeholder={t("new-placeholder")}
                     error={state.errors?.newPassword?.[0]}
                     {...register("newPassword")}
                 />
 
                 <FormInput
                     type="password"
-                    label="Confirm password"
-                    placeholder="Confirm your new password..."
+                    label={t("confirm")}
+                    placeholder={t("confirm-placeholder")}
                     error={state.errors?.confirmPassword?.[0]}
                     {...register("confirmPassword")}
                 />
@@ -116,16 +116,16 @@ export const CreatePassword: React.FC = () => {
 
                 <FormInput
                     type="password"
-                    label="New password"
-                    placeholder="Enter your new password..."
+                    label={t("new")}
+                    placeholder={t("new-placeholder")}
                     error={state.errors?.newPassword?.[0]}
                     {...register("newPassword")}
                 />
 
                 <FormInput
                     type="password"
-                    label="Confirm password"
-                    placeholder="Confirm your new password..."
+                    label={t("confirm")}
+                    placeholder={t("confirm-placeholder")}
                     error={state.errors?.confirmPassword?.[0]}
                     {...register("confirmPassword")}
                 />

@@ -1,8 +1,8 @@
-import { type NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { getUser } from "@/lib/auth";
 import db from "@/lib/db";
 
-export const GET = async (_req: NextRequest) => {
+export const GET = async () => {
     try {
         const user = await getUser();
 

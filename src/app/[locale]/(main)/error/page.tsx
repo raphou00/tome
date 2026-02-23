@@ -34,7 +34,7 @@ const Page = () => {
                 alt="500"
                 className="h-44 w-auto animate-bounce"
             />
-            <Title text="Oops !" className="w-max" />
+            <Title text={t("oops")} className="w-max" />
             <p className="text-center text-lg">{displayError()}</p>
             <Link href="/" className="btn btn-primary">
                 {t("home")}

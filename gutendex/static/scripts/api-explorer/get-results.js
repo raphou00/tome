@@ -9,5 +9,5 @@ export default function getResults() {
   fetch(urlElement.value)
     .then(response => response.json())
     .then(object => resultArea.textContent = JSON.stringify(object, null, 2))
-    .catch(failureReason => resultArea.textContent = ERROR_MESSAGE)
+    .catch(() => resultArea.textContent = ERROR_MESSAGE)
 }

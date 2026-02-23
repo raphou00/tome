@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import { useTranslations } from "next-intl";
 import type { User } from "lucia";
 import { useMotionValue, motion } from "framer-motion";
 import {
@@ -46,34 +47,19 @@ const COLORS = [
     "#fabf4288",
 ];
 
-const features = [
-    {
-        icon: Download,
-        title: "Instant Download",
-        description: "Get your eBook immediately after purchase",
-    },
-    {
-        icon: BookOpen,
-        title: "PDF Format",
-        description: "Read on any device or print at home",
-    },
-    {
-        icon: Star,
-        title: "High Quality",
-        description: "Professionally designed illustrations",
-    },
-    {
-        icon: Heart,
-        title: "Family Friendly",
-        description: "Stories kids love to read again and again",
-    },
-];
-
 export const Home: React.FC<CarouselProps> = ({
     user,
     carouselBooks,
     bestsellers,
 }) => {
+    const tFeatures = useTranslations("pages.home.features");
+    const tBestsellers = useTranslations("pages.home.bestsellers");
+    const tWhyChoose = useTranslations("pages.home.why-choose");
+    const tTestimonials = useTranslations("pages.home.testimonials");
+    const tWelcome = useTranslations("pages.home.welcome");
+    const tCta = useTranslations("pages.home.cta");
+    const tHero = useTranslations("pages.home.hero");
+
     const [cardIndex, setCardIndex] = useState(0);
     const dragX = useMotionValue(0);
 
@@ -102,89 +88,129 @@ export const Home: React.FC<CarouselProps> = ({
         }
     };
 
-    const renderCarousel = () => {
-        return (
-            <motion.div
-                drag="x"
-                dragConstraints={{ left: 0, right: 0 }}
-                style={{ x: dragX }}
-                animate={{ translateX: `-${cardIndex * 100}%` }}
-                transition={SPRING_OPTIONS}
-                onDragEnd={onDragEnd}
-                className="flex cursor-grab active:cursor-grabbing"
-            >
-                {carouselData.map((book, idx) => (
-                    <div
-                        key={idx}
-                        className={cn(
-                            "w-full shrink-0 relative min-h-[s60vh] flex items-center bg-base-300"
-                        )}
-                        style={{
-                            backgroundImage: `radial-gradient(88% 100% at top, ${COLORS[idx]}, rgba(255,255,255,0))`,
-                        }}
-                    >
-                        <div className="container mx-auto px-10 py-8 grid md:grid-cols-2 gap-12 items-center">
-                            <motion.div
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.2 }}
-                                className="space-y-6 z-10"
-                            >
-                                <span className="badge badge-lg badge-primary mb-3">
-                                    eBook Store
-                                </span>
-                                <Title
-                                    text={book.title}
-                                    className="text-2xl md:text-4xl font-black"
-                                />
-                                <p className="text-lg md:text-xl text-base-content/80 max-w-md">
-                                    {book.summaries?.[0].slice(0, 80)}...
-                                </p>
-                                <div className="flex flex-wrap gap-4">
-                                    <Link
-                                        href={`/book/${book.id}`}
-                                        className="btn btn-primary btn-lg"
-                                    >
-                                        Shop Now
-                                        <ArrowRight className="w-5 h-5" />
-                                    </Link>
-                                    <Link
-                                        href="/explore"
-                                        className="btn btn-outline btn-lg"
-                                    >
-                                        Browse All
-                                    </Link>
-                                </div>
-                            </motion.div>
-                            <motion.div
-                                initial={{ opacity: 0, scale: 0.9 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                                transition={{ delay: 0.3 }}
-                                className="relative flex justify-center"
-                            >
-                                <div className="relative overflow-hidden rounded-field w-72 aspect-9/12">
-                                    <Image
-                                        src={book.cover}
-                                        alt={book.title}
-                                        fill
-                                        priority
-                                        className="rounded-field object-contain transition hover:scale-105"
-                                    />
-                                </div>
-                                <div className="absolute z-30 w-72 aspect-9/12" />
-                            </motion.div>
-                        </div>
-                    </div>
-                ))}
-            </motion.div>
-        );
-    };
+    const features = [
+        {
+            icon: Download,
+            title: tFeatures("instant-download"),
+            description: tFeatures("instant-download-desc"),
+        },
+        {
+            icon: BookOpen,
+            title: tFeatures("pdf-format"),
+            description: tFeatures("pdf-format-desc"),
+        },
+        {
+            icon: Star,
+            title: tFeatures("high-quality"),
+            description: tFeatures("high-quality-desc"),
+        },
+        {
+            icon: Heart,
+            title: tFeatures("family-friendly"),
+            description: tFeatures("family-friendly-desc"),
+        },
+    ];
+
+    const testimonials = [
+        {
+            name: "Sarah M.",
+            rating: 5,
+            text: "My kids absolutely love these books! The illustrations are beautiful and the stories are engaging.",
+        },
+        {
+            name: "John D.",
+            rating: 5,
+            text: "Great instant download. Perfect for bedtime stories. My daughter asks for them every night!",
+        },
+        {
+            name: "Emily R.",
+            rating: 5,
+            text: "Amazing value for the quality. We have the whole collection now. Highly recommend!",
+        },
+    ];
 
     return (
         <div className="space-y-16">
             <section>
                 <div className="relative overflow-hidden">
-                    {renderCarousel()}
+                    {carouselData.length > 0 ?
+                        <motion.div
+                            drag="x"
+                            dragConstraints={{ left: 0, right: 0 }}
+                            style={{ x: dragX }}
+                            animate={{ translateX: `-${cardIndex * 100}%` }}
+                            transition={SPRING_OPTIONS}
+                            onDragEnd={onDragEnd}
+                            className="flex cursor-grab active:cursor-grabbing"
+                        >
+                            {carouselData.map((book, idx) => (
+                                <div
+                                    key={idx}
+                                    className={cn(
+                                        "w-full shrink-0 relative min-h-[60vh] flex items-center bg-base-300"
+                                    )}
+                                    style={{
+                                        backgroundImage: `radial-gradient(88% 100% at top, ${COLORS[idx]}, rgba(255,255,255,0))`,
+                                    }}
+                                >
+                                    <div className="container mx-auto px-10 py-8 grid md:grid-cols-2 gap-12 items-center">
+                                        <motion.div
+                                            initial={{ opacity: 0, y: 20 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            transition={{ delay: 0.2 }}
+                                            className="space-y-6 z-10"
+                                        >
+                                            <span className="badge badge-lg badge-primary mb-3">
+                                                {book.authors}
+                                            </span>
+                                            <Title
+                                                text={book.title}
+                                                className="text-2xl md:text-4xl font-black"
+                                            />
+                                            <p className="text-lg md:text-xl text-base-content/80 max-w-md">
+                                                {book.summaries?.[0]?.slice(
+                                                    0,
+                                                    80
+                                                )}
+                                                ...
+                                            </p>
+                                            <div className="flex flex-wrap gap-4">
+                                                <Link
+                                                    href={`/book/${book.id}`}
+                                                    className="btn btn-primary btn-lg"
+                                                >
+                                                    {tHero("cta-shop")}
+                                                    <ArrowRight className="w-5 h-5" />
+                                                </Link>
+                                                <Link
+                                                    href="/explore"
+                                                    className="btn btn-outline btn-lg"
+                                                >
+                                                    {tHero("cta-browse")}
+                                                </Link>
+                                            </div>
+                                        </motion.div>
+                                        <motion.div
+                                            initial={{ opacity: 0, scale: 0.9 }}
+                                            animate={{ opacity: 1, scale: 1 }}
+                                            transition={{ delay: 0.3 }}
+                                            className="relative flex justify-center"
+                                        >
+                                            <div className="relative overflow-hidden rounded-field w-72 aspect-9/12">
+                                                <Image
+                                                    src={book.cover}
+                                                    alt={book.title}
+                                                    fill
+                                                    priority
+                                                    className="rounded-field object-contain transition hover:scale-105"
+                                                />
+                                            </div>
+                                        </motion.div>
+                                    </div>
+                                </div>
+                            ))}
+                        </motion.div>
+                    :   null}
                     {carouselData.length > 1 && (
                         <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2">
                             {carouselData.map((_, idx) => (
@@ -231,15 +257,16 @@ export const Home: React.FC<CarouselProps> = ({
                 <div className="flex items-end justify-between mb-12">
                     <div>
                         <Title
-                            text="Bestsellers"
+                            text={tBestsellers("title")}
                             className="text-3xl md:text-4xl"
                         />
                         <p className="text-base-content/70 mt-2">
-                            Our most popular eBooks
+                            {tBestsellers("subtitle")}
                         </p>
                     </div>
                     <Link href="/explore" className="btn btn-ghost">
-                        View All <ArrowRight className="w-4 h-4" />
+                        {tBestsellers("view-all")}{" "}
+                        <ArrowRight className="w-4 h-4" />
                     </Link>
                 </div>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
@@ -262,20 +289,19 @@ export const Home: React.FC<CarouselProps> = ({
                     <div className="grid md:grid-cols-2 gap-12 items-center">
                         <div>
                             <Title
-                                text="Why Choose Our eBooks?"
+                                text={tWhyChoose("title")}
                                 className="text-3xl md:text-4xl"
                             />
                             <p className="text-base-content/70 mt-4 mb-8">
-                                We offer the best digital reading experience for
-                                children and parents alike.
+                                {tWhyChoose("description")}
                             </p>
                             <div className="space-y-4">
                                 {[
-                                    "Instant digital delivery",
-                                    "PDF format compatible with all devices",
-                                    "Print-friendly for offline reading",
-                                    "Lifetime access to your purchases",
-                                    "Secure checkout with Stripe",
+                                    tWhyChoose("instant-delivery"),
+                                    tWhyChoose("pdf-compatible"),
+                                    tWhyChoose("print-friendly"),
+                                    tWhyChoose("lifetime-access"),
+                                    tWhyChoose("secure-checkout"),
                                 ].map((item, idx) => (
                                     <div
                                         key={idx}
@@ -291,31 +317,33 @@ export const Home: React.FC<CarouselProps> = ({
                             <div className="bg-base-100 p-6 rounded-box text-center">
                                 <Zap className="w-8 h-8 text-primary mx-auto mb-2" />
                                 <div className="text-3xl font-black">
-                                    Instant
+                                    {tWhyChoose("instant")}
                                 </div>
                                 <div className="text-base-content/60">
-                                    Delivery
+                                    {tWhyChoose("delivery")}
                                 </div>
                             </div>
                             <div className="bg-base-100 p-6 rounded-box text-center">
                                 <Download className="w-8 h-8 text-secondary mx-auto mb-2" />
-                                <div className="text-3xl font-black">PDF</div>
+                                <div className="text-3xl font-black">
+                                    {tWhyChoose("pdf")}
+                                </div>
                                 <div className="text-base-content/60">
-                                    Format
+                                    {tWhyChoose("format")}
                                 </div>
                             </div>
                             <div className="bg-base-100 p-6 rounded-box text-center">
                                 <Star className="w-8 h-8 text-warning mx-auto mb-2" />
                                 <div className="text-3xl font-black">4.9</div>
                                 <div className="text-base-content/60">
-                                    Rating
+                                    {tWhyChoose("rating")}
                                 </div>
                             </div>
                             <div className="bg-base-100 p-6 rounded-box text-center">
                                 <Heart className="w-8 h-8 text-error mx-auto mb-2" />
                                 <div className="text-3xl font-black">1000+</div>
                                 <div className="text-base-content/60">
-                                    Readers
+                                    {tWhyChoose("readers")}
                                 </div>
                             </div>
                         </div>
@@ -326,31 +354,15 @@ export const Home: React.FC<CarouselProps> = ({
             <section className="container mx-auto px-6">
                 <div className="text-center mb-12">
                     <Title
-                        text="What Our Readers Say"
+                        text={tTestimonials("title")}
                         className="text-3xl md:text-4xl"
                     />
                     <p className="text-base-content/70 mt-2">
-                        Join thousands of happy families
+                        {tTestimonials("subtitle")}
                     </p>
                 </div>
                 <div className="grid md:grid-cols-3 gap-6">
-                    {[
-                        {
-                            name: "Sarah M.",
-                            rating: 5,
-                            text: "My kids absolutely love these books! The illustrations are beautiful and the stories are engaging.",
-                        },
-                        {
-                            name: "John D.",
-                            rating: 5,
-                            text: "Great instant download. Perfect for bedtime stories. My daughter asks for them every night!",
-                        },
-                        {
-                            name: "Emily R.",
-                            rating: 5,
-                            text: "Amazing value for the quality. We have the whole collection now. Highly recommend!",
-                        },
-                    ].map((review, idx) => (
+                    {testimonials.map((review, idx) => (
                         <motion.div
                             key={idx}
                             initial={{ opacity: 0, y: 20 }}
@@ -380,16 +392,16 @@ export const Home: React.FC<CarouselProps> = ({
                         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
                             <div className="text-primary-content">
                                 <Title
-                                    text="Welcome back!"
+                                    text={tWelcome("title")}
                                     className="text-2xl lg:text-3xl text-primary-content"
                                 />
                                 <p className="mt-2 text-primary-content/80">
-                                    Continue reading your purchased eBooks
+                                    {tWelcome("description")}
                                 </p>
                             </div>
                             <Link href="/library" className="btn btn-accent">
                                 <Library className="w-5 h-5" />
-                                Go to Library
+                                {tWelcome("cta")}
                             </Link>
                         </div>
                     </div>
@@ -400,26 +412,26 @@ export const Home: React.FC<CarouselProps> = ({
                 <div className="card bg-base-200 p-8 md:p-12 text-center">
                     <Sparkles className="w-12 h-12 text-primary mx-auto mb-4" />
                     <Title
-                        text="Ready to Start Reading?"
+                        text={tCta("title")}
                         className="text-3xl md:text-4xl"
                     />
                     <p className="text-base-content/70 mt-4 mb-8 max-w-md mx-auto">
-                        Browse our collection of magical children&apos;s eBooks
-                        and start your adventure today!
+                        {tCta("description")}
                     </p>
                     <div className="flex flex-wrap justify-center gap-4">
                         <Link
                             href="/explore"
                             className="btn btn-primary btn-lg"
                         >
-                            Shop Now <ArrowRight className="w-5 h-5" />
+                            {tCta("shop-now")}{" "}
+                            <ArrowRight className="w-5 h-5" />
                         </Link>
                         {!user && (
                             <Link
                                 href="/register"
                                 className="btn btn-outline btn-lg"
                             >
-                                Create Account
+                                {tCta("create-account")}
                             </Link>
                         )}
                     </div>
