@@ -1,0 +1,32 @@
+services:
+    db:
+        image: postgres:16
+        container_name: gutendex-db
+        restart: always
+        environment:
+            POSTGRES_DB: gutendex
+            POSTGRES_USER: gutendex
+            POSTGRES_PASSWORD: gutendex
+        volumes:
+            - gutendex-db:/var/lib/postgresql/data
+        ports:
+            - "5432:5432"
+
+    gutendex:
+        build: .
+        container_name: gutendex-api
+        restart: always
+        depends_on:
+            - db
+        env_file:
+            - .env
+        ports:
+            - "8000:8000"
+        volumes:
+            - static:/app/static
+            - media:/app/media
+
+volumes:
+    gutendex-db:
+    static:
+    media:
