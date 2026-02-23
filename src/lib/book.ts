@@ -57,6 +57,20 @@ export const getBooksExplore = async ({
         skip,
         where,
         orderBy: getSortOrder(sort),
+        include: {
+            reviews: {
+                where: {
+                    isApproved: true,
+                },
+                include: {
+                    user: {
+                        select: {
+                            name: true,
+                        },
+                    },
+                },
+            },
+        },
     });
 
     return books;
@@ -80,13 +94,29 @@ export const getBooksCount = async (search = ""): Promise<number> => {
             }
         :   undefined;
 
-    return db.book.count({ where });
+    return db.book.count({
+        where,
+    });
 };
 
 export const getBooksCarousel = async (): Promise<Books> => {
     const books = await db.book.findMany({
         orderBy: {
             popularity: "desc",
+        },
+        include: {
+            reviews: {
+                where: {
+                    isApproved: true,
+                },
+                include: {
+                    user: {
+                        select: {
+                            name: true,
+                        },
+                    },
+                },
+            },
         },
         take: 5,
     });
@@ -98,6 +128,20 @@ export const getBestsellers = async (): Promise<Books> => {
     const books = await db.book.findMany({
         orderBy: {
             popularity: "desc",
+        },
+        include: {
+            reviews: {
+                where: {
+                    isApproved: true,
+                },
+                include: {
+                    user: {
+                        select: {
+                            name: true,
+                        },
+                    },
+                },
+            },
         },
         take: 8,
     });

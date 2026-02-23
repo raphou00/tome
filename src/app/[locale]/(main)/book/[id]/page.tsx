@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
+import { getUser } from "@/lib/auth";
 import Main from "@/components/layout/main";
 import BookDetails from "./book";
 import { getBookDetails, getBestsellers } from "@/lib/book";
@@ -32,11 +33,18 @@ const Page = async ({ params }: { params: Promise<{ id: string }> }) => {
         return redirect("/");
     }
 
-    const recommendation = await getBestsellers();
+    const [recommendation, user] = await Promise.all([
+        getBestsellers(),
+        getUser(),
+    ]);
 
     return (
         <Main>
-            <BookDetails book={book} recommendation={recommendation} />
+            <BookDetails
+                book={book}
+                recommendation={recommendation}
+                user={user?.user || null}
+            />
         </Main>
     );
 };

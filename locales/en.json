@@ -243,7 +243,18 @@
             "home": "Home",
             "books": "Books",
             "language": "Language",
-            "subjects": "Subjects"
+            "subjects": "Subjects",
+            "your-rating": "Your Rating",
+            "rating-required": "Please select a rating",
+            "review-title": "Review Title (optional)",
+            "review-title-placeholder": "Sum up your review...",
+            "review-content": "Your Review",
+            "review-content-placeholder": "Share your thoughts about this book...",
+            "submit-review": "Submit Review",
+            "review-submitted": "Thank you! Your review has been submitted and is pending approval.",
+            "login-to-review": "Login to write a review",
+            "no-reviews": "No reviews yet. Be the first to review this book!",
+            "write-review": "Write a Review"
         },
         "cart": {
             "title": "Shopping cart",

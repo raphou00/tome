@@ -2,23 +2,27 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
 import { useTranslations } from "next-intl";
-import { ShoppingCart, Star } from "lucide-react";
+import { ShoppingCart, Star, MessageSquare } from "lucide-react";
 import toast from "react-hot-toast";
 import { formatAmountForDisplay } from "@/lib/utils";
 import type { Book, Books } from "@/lib/types";
+import type { User } from "lucia";
 import { useCart } from "@/contexts/CartContext";
 import Title from "@/components/ui/title";
 import Rating from "@/components/ui/rating";
 import BookCard from "@/components/ui/book";
 import Avatar from "@/components/ui/avatar";
+import { ReviewForm } from "./review-form";
 
 type BookProps = {
     book: Book;
     recommendation: Books;
+    user: User | null;
 };
 
-const BookDetails: React.FC<BookProps> = ({ book, recommendation }) => {
+const BookDetails: React.FC<BookProps> = ({ book, recommendation, user }) => {
     const t = useTranslations("pages.book");
     const tCommon = useTranslations("common");
     const { addItem } = useCart();
@@ -80,7 +84,7 @@ const BookDetails: React.FC<BookProps> = ({ book, recommendation }) => {
                             {book.subjects?.slice(0, 5).map((subject) => (
                                 <span
                                     key={subject}
-                                    className="badge badge-primary bg-primary/80 badge-sm"
+                                    className="badge badge-primary badge-sm"
                                 >
                                     {subject}
                                 </span>
@@ -149,12 +153,17 @@ const BookDetails: React.FC<BookProps> = ({ book, recommendation }) => {
                     </div>
                 </div>
 
-                {book.reviews && book.reviews.length > 0 && (
-                    <div className="border-t border-neutral/20 pt-6">
-                        <Title className="text-2xl pb-4" text={t("reviews")} />
-                        <BookReview reviews={book.reviews} />
-                    </div>
-                )}
+                <div className="border-t border-neutral/20 pt-6">
+                    <Title
+                        className="text-2xl pb-4"
+                        text={t("customer-reviews")}
+                    />
+                    <BookReview
+                        reviews={book.reviews || []}
+                        bookId={book.id}
+                        user={user}
+                    />
+                </div>
             </div>
         </div>
     );
@@ -162,6 +171,8 @@ const BookDetails: React.FC<BookProps> = ({ book, recommendation }) => {
 
 type BookReviewProps = {
     reviews: Book["reviews"];
+    bookId: string;
+    user: User | null;
 };
 
 type Stats = {
@@ -176,8 +187,10 @@ type RatingBarProps = {
     total: number;
 };
 
-const BookReview: React.FC<BookReviewProps> = ({ reviews }) => {
+const BookReview: React.FC<BookReviewProps> = ({ reviews, bookId, user }) => {
     const t = useTranslations("pages.book");
+    const [showForm, setShowForm] = useState(false);
+
     const calculateStats = (): Stats => {
         if (!reviews || reviews.length === 0) {
             return {
@@ -211,7 +224,7 @@ const BookReview: React.FC<BookReviewProps> = ({ reviews }) => {
         return (
             <div className="flex items-center gap-3">
                 <span className="text-sm text-neutral w-4">{rating}</span>
-                <Star className="fill-yellow-500 text-yellow-500" />
+                <Star className="fill-yellow-500 text-yellow-500 w-4 h-4" />
                 <div className="flex-1 bg-neutral/20 rounded-full h-2 max-w-xs">
                     <div
                         className="bg-neutral h-2 rounded-full transition-all"
@@ -227,22 +240,16 @@ const BookReview: React.FC<BookReviewProps> = ({ reviews }) => {
 
     return (
         <>
-            <div className="flex items-start gap-6 mb-8 pb-8">
-                <div>
-                    <div className="flex items-baseline gap-2">
-                        <span className="text-5xl font-bold">
-                            {stats.average}
-                        </span>
-                        <div className="flex gap-1">
-                            <Rating reviews={[{ rating: stats.average }]} />
-                        </div>
+            <div className="flex flex-col md:flex-row gap-6 mb-8 pb-8 border-b border-neutral/20">
+                <div className="flex-shrink-0 text-center md:text-left">
+                    <div className="text-5xl font-bold">{stats.average}</div>
+                    <Rating reviews={[{ rating: stats.average }]} />
+                    <div className="text-sm text-neutral mt-1">
+                        {stats.total} {t("reviews")}
                     </div>
-                    <button className="link link-primary link-sm mt-2">
-                        {t("reviews-book")}
-                    </button>
                 </div>
 
-                <div className="flex-1 space-y-3">
+                <div className="flex-1 space-y-2">
                     {[5, 4, 3, 2, 1].map((rating) => (
                         <RatingBar
                             key={rating}
@@ -254,15 +261,40 @@ const BookReview: React.FC<BookReviewProps> = ({ reviews }) => {
                 </div>
             </div>
 
-            <div className="space-y-6 lg:px-8">
-                <div className="flex items-center justify-between pt-6 border-t border-neutral/20">
-                    <h3 className="text-lg font-semibold">
-                        {stats.total} {t("reviews")}
-                    </h3>
+            {user ?
+                <div className="mb-8">
+                    {!showForm ?
+                        <button
+                            onClick={() => setShowForm(true)}
+                            className="btn btn-primary btn-outline"
+                        >
+                            <MessageSquare className="w-4 h-4" />
+                            {t("write-review")}
+                        </button>
+                    :   <div className="card bg-base-200 p-6">
+                            <h3 className="font-bold mb-4">
+                                {t("write-review")}
+                            </h3>
+                            <ReviewForm
+                                bookId={bookId}
+                                onSuccess={() => setShowForm(false)}
+                            />
+                        </div>
+                    }
                 </div>
+            :   <div className="mb-8">
+                    <Link href="/login" className="link link-primary">
+                        {t("login-to-review")}
+                    </Link>
+                </div>
+            }
 
-                <div className="space-y-6">
-                    {reviews.map((review, index) => (
+            <div className="space-y-6 lg:px-8">
+                {reviews.length === 0 ?
+                    <p className="text-center text-neutral py-8">
+                        {t("no-reviews")}
+                    </p>
+                :   reviews.map((review, index) => (
                         <div
                             key={index}
                             className="border-b border-neutral/20 pb-6 last:border-0"
@@ -278,7 +310,7 @@ const BookReview: React.FC<BookReviewProps> = ({ reviews }) => {
                                             {review.user.name}
                                         </p>
                                         <p className="text-xs text-neutral">
-                                            il y a 3 mois • a acheté ce produit
+                                            {new Date().toLocaleDateString()}
                                         </p>
                                     </div>
                                 </div>
@@ -288,13 +320,17 @@ const BookReview: React.FC<BookReviewProps> = ({ reviews }) => {
                                 <Rating reviews={[review]} />
                             </div>
 
-                            <h4>{review.title}</h4>
+                            {review.title && (
+                                <h4 className="font-semibold">
+                                    {review.title}
+                                </h4>
+                            )}
                             <p className="text-sm text-neutral">
                                 {review.content}
                             </p>
                         </div>
-                    ))}
-                </div>
+                    ))
+                }
             </div>
         </>
     );
